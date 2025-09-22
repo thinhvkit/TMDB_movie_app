@@ -1,0 +1,20 @@
+{
+  "searchPlaceholder": "Search...",
+  "sortPlaceholder": "Sort by",
+  "searchButton": "Search",
+  "loadingMovies": "Loading movies...",
+  "noMoviesFound": "No movies found for your search.",
+  "noMoviesAvailable": "No movies available.",
+  "loadingMovieDetails": "Loading movie details...",
+  "movieNotFound": "Movie not found",
+  "status": "Status",
+  "originalLanguage": "Original Language",
+  "userScore": "User Score",
+  "director": "Director",
+  "writer": "Writer",
+  "overview": "Overview",
+  "addToWatchlist": "Add to Watchlist",
+  "removeFromWatchlist": "Remove from Watchlist",
+  "cast": "Top Billed Cast",
+  "recommendedMovies": "Recommendations"
+}
