@@ -22,6 +22,7 @@ import MovieCard from '../components/MovieCard';
 import CustomDropdown from '../components/CustomDropdown';
 import AscendingArrowIcon from '../components/svg-icons/AsendingArowIcon';
 import DescendingArrowIcon from '../components/svg-icons/DescendingArrowIcon';
+import {COLORS} from '../constants/colors';
 
 type WatchlistScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -123,7 +124,7 @@ export default function WatchlistScreen() {
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Icon name="bookmark-border" size={64} color="#ccc" />
+            <Icon name="bookmark-border" size={64} color={COLORS.grayLighter} />
             <Text style={styles.emptyTitle}>Your watchlist is empty</Text>
             <Text style={styles.emptyText}>
               Add movies to your watchlist to keep track of what you want to
@@ -139,18 +140,18 @@ export default function WatchlistScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: COLORS.background,
   },
   listContainer: {
     paddingBottom: 20,
     paddingTop: 10,
   },
   header: {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: COLORS.backgroundTertiary,
     paddingHorizontal: 16,
     paddingTop: 40,
     marginBottom: 15,
-    shadowColor: '#000',
+    shadowColor: COLORS.black,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 24,
-    backgroundColor: '#042541',
+    backgroundColor: COLORS.secondary,
     padding: 16,
     borderRadius: 12,
   },
@@ -178,13 +179,13 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#1976D2',
+    backgroundColor: COLORS.primaryDark,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   avatarText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -192,13 +193,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userName: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 2,
   },
   joinDate: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 14,
     opacity: 0.8,
   },
@@ -212,23 +213,23 @@ const styles = StyleSheet.create({
   watchlistTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
     marginBottom: 4,
   },
   movieCount: {
     fontSize: 14,
-    color: '#000',
+    color: COLORS.black,
     opacity: 0.8,
   },
   controls: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: COLORS.backgroundTransparent,
     borderRadius: 8,
     zIndex: 1001,
   },
   filterLabel: {
-    color: '#828282',
+    color: COLORS.grayMedium,
     fontSize: 14,
     fontWeight: '600',
     marginBottom: 8,
@@ -248,14 +249,14 @@ const styles = StyleSheet.create({
   orderButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: COLORS.transparent,
     paddingHorizontal: 12,
     paddingVertical: 12,
     borderRadius: 8,
     gap: 8,
   },
   orderButtonText: {
-    color: '#828282',
+    color: COLORS.grayMedium,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -269,24 +270,24 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: COLORS.grayDark,
     marginTop: 16,
     marginBottom: 8,
   },
   emptyText: {
     fontSize: 16,
-    color: '#666',
+    color: COLORS.gray,
     textAlign: 'center',
     lineHeight: 22,
   },
   dropdownButton: {
     paddingHorizontal: 8,
     paddingVertical: 12,
-    backgroundColor: 'transparent',
+    backgroundColor: COLORS.transparent,
     borderRadius: 0,
     borderWidth: 0,
-    borderColor: 'transparent',
-    shadowColor: 'transparent',
+    borderColor: COLORS.transparent,
+    shadowColor: COLORS.transparent,
     shadowOpacity: 0,
     shadowRadius: 0,
     minHeight: 20,

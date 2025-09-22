@@ -24,6 +24,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import strings from '../constants/strings.json';
 import WatchListIcon from '../components/svg-icons/WatchListIcon';
+import {COLORS} from '../constants/colors';
 
 const CircularProgress = React.memo(({score}: {score: number}) => {
   const radius = 25;
@@ -36,7 +37,7 @@ const CircularProgress = React.memo(({score}: {score: number}) => {
         cx={30}
         cy={30}
         r={radius}
-        stroke="#333"
+        stroke={COLORS.grayDark}
         strokeWidth={4}
         fill="transparent"
       />
@@ -44,7 +45,7 @@ const CircularProgress = React.memo(({score}: {score: number}) => {
         cx={30}
         cy={30}
         r={radius}
-        stroke="#4CAF50"
+        stroke={COLORS.success}
         strokeWidth={4}
         fill="transparent"
         strokeDasharray={circumference}
@@ -311,7 +312,7 @@ export default function MovieDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#00B4E4',
+    backgroundColor: COLORS.accent,
   },
   backdropContainer: {
     position: 'relative',
@@ -327,10 +328,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: COLORS.backgroundOverlay,
   },
   movieInfo: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     padding: 16,
     marginTop: -20,
     borderTopLeftRadius: 20,
@@ -352,12 +353,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
     marginBottom: 4,
   },
   year: {
     fontSize: 16,
-    color: '#000',
+    color: COLORS.black,
     marginBottom: 8,
   },
   movieMeta: {
@@ -367,32 +368,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
-    borderColor: '#fff',
+    borderColor: COLORS.white,
     borderWidth: 1,
     alignSelf: 'flex-start',
     marginBottom: 4,
   },
   certification: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 12,
     fontWeight: 'bold',
   },
   metaText: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 14,
   },
   genres: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 14,
     marginBottom: 4,
   },
   status: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 12,
     marginBottom: 2,
   },
   language: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 12,
   },
   userScoreContainer: {
@@ -416,25 +417,25 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#000',
+    backgroundColor: COLORS.black,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
     position: 'relative',
   },
   scoreText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
   percentText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 8,
     fontWeight: 'normal',
     textAlignVertical: 'top',
   },
   userScoreLabel: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 14,
     fontWeight: '600',
     marginRight: 20,
@@ -443,16 +444,16 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   directorName: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 14,
     fontWeight: '600',
   },
   directorJob: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 12,
   },
   tagline: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 16,
     fontStyle: 'italic',
     marginBottom: 16,
@@ -463,11 +464,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.black,
     marginBottom: 12,
   },
   overview: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 14,
     lineHeight: 20,
   },
@@ -475,7 +476,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    borderColor: '#000',
+    borderColor: COLORS.black,
     borderWidth: 1,
     paddingVertical: 12,
     paddingHorizontal: 24,
@@ -483,10 +484,10 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   watchlistButtonActive: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: COLORS.success,
   },
   watchlistButtonText: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 16,
     fontWeight: '600',
     marginLeft: 8,
@@ -506,14 +507,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   castName: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 2,
   },
   castCharacter: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 10,
     textAlign: 'center',
   },
@@ -531,7 +532,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   recommendationTitle: {
-    color: '#000',
+    color: COLORS.black,
     fontSize: 12,
     textAlign: 'center',
   },

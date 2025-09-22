@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import ChevronDownIcon from './svg-icons/ChevronDownIcon';
 import ChevronRightIcon from './svg-icons/ChevronRightIcon';
+import {COLORS} from '../constants/colors';
 
 interface DropdownOption {
   label: string;
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.gray,
     marginBottom: 8,
   },
   dropdownButton: {
@@ -133,11 +134,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    shadowColor: '#000',
+    borderColor: COLORS.border,
+    shadowColor: COLORS.shadow,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
   },
   selectedText: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.grayDark,
   },
   iconContainer: {
     alignItems: 'center',
@@ -157,11 +158,11 @@ const styles = StyleSheet.create({
     top: '100%',
     left: 0,
     right: 0,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    shadowColor: '#000',
+    borderColor: COLORS.border,
+    shadowColor: COLORS.shadow,
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.15,
     shadowRadius: 8,
@@ -177,18 +178,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f5f5f5',
+    borderBottomColor: COLORS.borderLight,
     minHeight: 48,
   },
   selectedOption: {
-    backgroundColor: '#00B4E4',
+    backgroundColor: COLORS.accent,
   },
   optionText: {
     fontSize: 16,
-    color: '#333',
+    color: COLORS.grayDark,
   },
   selectedOptionText: {
-    color: '#fff',
+    color: COLORS.textLight,
     fontWeight: '500',
   },
   backdrop: {

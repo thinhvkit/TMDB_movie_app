@@ -4,6 +4,7 @@ import {Movie} from '../types';
 import {apiService} from '../services/api';
 import {formatDate, formatRating, truncateText} from '../utils/sorting';
 import CancelIcon from './svg-icons/CancelIcon';
+import {COLORS} from '../constants/colors';
 
 interface MovieCardProps {
   movie: Movie;
@@ -59,9 +60,9 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     borderRadius: 12,
-    shadowColor: '#000',
+    shadowColor: COLORS.shadow,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.text,
     flex: 1,
     marginRight: 8,
   },
@@ -98,13 +99,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   removeButtonText: {
-    color: '#fff',
+    color: COLORS.textLight,
     fontSize: 16,
     fontWeight: 'bold',
   },
   releaseDate: {
     fontSize: 12,
-    color: '#999999',
+    color: COLORS.grayLight,
     marginBottom: 4,
   },
   ratingContainer: {
@@ -112,11 +113,11 @@ const styles = StyleSheet.create({
   },
   rating: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.gray,
   },
   overview: {
     fontSize: 12,
-    color: '#000000',
+    color: COLORS.text,
     lineHeight: 16,
   },
 });

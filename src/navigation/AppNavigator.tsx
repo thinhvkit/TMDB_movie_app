@@ -9,6 +9,7 @@ import WatchlistScreen from '../screens/WatchlistScreen';
 import HomeIcon from '../components/svg-icons/HomeIcon';
 import WatchListIcon from '../components/svg-icons/WatchListIcon';
 import DbLogo from '../components/svg-icons/DbLogo';
+import {COLORS} from '../constants/colors';
 
 export type RootStackParamList = {
   Main: undefined;
@@ -42,12 +43,12 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarIcon: tabBarIcon(route.name),
-        tabBarActiveTintColor: '#2196F3',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.gray,
         tabBarStyle: {
-          backgroundColor: '#042541',
+          backgroundColor: COLORS.secondary,
           borderTopWidth: 1,
-          borderTopColor: '#e0e0e0',
+          borderTopColor: COLORS.border,
           paddingBottom: 8,
           paddingTop: 8,
           height: 60,
@@ -93,7 +94,7 @@ export default function AppNavigator() {
             headerBackTitleVisible: false,
             headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: COLORS.white,
             },
           }}
         />

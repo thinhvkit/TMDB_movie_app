@@ -23,6 +23,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import strings from '../constants/strings.json';
 import CustomDropdown from '../components/CustomDropdown';
+import {COLORS} from '../constants/colors';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -183,14 +184,14 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: COLORS.background,
   },
   listContainer: {
     paddingBottom: 20,
     paddingTop: 10,
   },
   header: {
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.backgroundSecondary,
     paddingHorizontal: 16,
     paddingVertical: 20,
     marginBottom: 10,
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    color: COLORS.white,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -225,28 +226,28 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   searchInput: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    shadowColor: '#000',
+    borderColor: COLORS.border,
+    shadowColor: COLORS.black,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
   searchButton: {
-    backgroundColor: '#E4E4E4',
+    backgroundColor: COLORS.backgroundDisabled,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 20,
     justifyContent: 'center',
   },
   searchButtonText: {
-    color: 'rgba(0, 0, 0, 0.5)',
+    color: COLORS.textMuted,
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#666',
+    color: COLORS.gray,
     textAlign: 'center',
   },
 });
