@@ -1,5 +1,5 @@
 /* cSpell:ignore watchlist */
-import React, {useState, useEffect, useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   View,
   Text,
@@ -15,8 +15,13 @@ import {useRoute, RouteProp} from '@react-navigation/native';
 import Svg, {Circle} from 'react-native-svg';
 
 import {useAppContext} from '../contexts/AppContext';
-import {apiService} from '../services/api';
-import {MovieDetails, Cast, Crew, Movie} from '../types';
+import {
+  useMovie,
+  useMovieCredits,
+  useMovieRecommendations,
+} from '../hooks/useGraphQLMovies';
+import {graphqlService} from '../services/graphqlService';
+import {Cast, Movie} from '../types';
 import {formatDate, formatRuntime, getCertification} from '../utils/sorting';
 import {RootStackParamList} from '../navigation/AppNavigator';
 
@@ -66,48 +71,73 @@ export default function MovieDetailScreen() {
   const {movieId} = route.params;
   const {addToWatchlist, removeFromWatchlist, isInWatchlist} = useAppContext();
 
-  const [movie, setMovie] = useState<MovieDetails | null>(null);
-  const [cast, setCast] = useState<Cast[]>([]);
-  const [crew, setCrew] = useState<Crew[]>([]);
-  const [recommendations, setRecommendations] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // GraphQL hooks for all data
+  const {
+    data: graphqlMovie,
+    loading: movieLoading,
+    error: movieError,
+    refetch: refetchMovie,
+  } = useMovie(movieId);
+
+  const {
+    data: creditsData,
+    loading: creditsLoading,
+    error: creditsError,
+    refetch: refetchCredits,
+  } = useMovieCredits(movieId);
+
+  const {
+    data: recommendationsData,
+    loading: recommendationsLoading,
+    error: recommendationsError,
+    refetch: refetchRecommendations,
+  } = useMovieRecommendations(movieId);
+
+  // Helper function to normalize movie data
+  const normalizeMovie = (movie: any) => {
+    if (!movie) {
+      return null;
+    }
+    return {
+      ...movie,
+      id: typeof movie.id === 'string' ? parseInt(movie.id, 10) : movie.id,
+      overview: movie.overview || '',
+      poster_path: movie.posterPath || movie.poster_path || null,
+      backdrop_path: movie.backdropPath || movie.backdrop_path || null,
+      release_date: movie.releaseDate || movie.release_date || '',
+      adult: movie.adult || false,
+      original_language:
+        movie.originalLanguage || movie.original_language || '',
+      original_title: movie.originalTitle || movie.original_title || '',
+      vote_average: movie.voteAverage || movie.vote_average || 0,
+      vote_count: movie.voteCount || movie.vote_count || 0,
+      genres: movie.genres || [],
+      runtime: movie.runtime,
+      status: movie.status,
+      tagline: movie.tagline,
+    };
+  };
+
+  // Combine all GraphQL data
+  const loading = movieLoading || creditsLoading || recommendationsLoading;
+  const error = movieError || creditsError || recommendationsError;
+  const movie = normalizeMovie(graphqlMovie);
+
+  // Process data from GraphQL hooks
+  const cast = creditsData?.cast.slice(0, 10) || [];
+  const crew =
+    creditsData?.crew.filter(
+      person => person.job === 'Director' || person.job === 'Writer',
+    ) || [];
+  const recommendations = recommendationsData?.results.slice(0, 10) || [];
 
   const inWatchlist = movie ? isInWatchlist(movie.id) : false;
 
-  const fetchMovieDetails = useCallback(async () => {
-    try {
-      setError(null);
-      setLoading(true);
-
-      const [movieData, creditsData, recommendationsData] = await Promise.all([
-        apiService.getMovieDetails(movieId),
-        apiService.getMovieCredits(movieId),
-        apiService
-          .getMovieRecommendations(movieId)
-          .catch(() => ({results: []})),
-      ]);
-
-      setMovie(movieData);
-      setCast(creditsData.cast.slice(0, 10));
-      setCrew(
-        creditsData.crew.filter(
-          person => person.job === 'Director' || person.job === 'Writer',
-        ),
-      );
-      setRecommendations(recommendationsData.results.slice(0, 10));
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to fetch movie details',
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [movieId]);
-
-  useEffect(() => {
-    fetchMovieDetails();
-  }, [movieId, fetchMovieDetails]);
+  const handleRetry = useCallback(() => {
+    refetchMovie();
+    refetchCredits();
+    refetchRecommendations();
+  }, [refetchMovie, refetchCredits, refetchRecommendations]);
 
   const handleWatchlistToggle = () => {
     if (!movie) {
@@ -117,14 +147,24 @@ export default function MovieDetailScreen() {
     if (inWatchlist) {
       removeFromWatchlist(movie.id);
     } else {
-      addToWatchlist(movie);
+      // Convert to Movie type for watchlist
+      const movieForWatchlist = {
+        ...movie,
+        genre_ids:
+          movie.genres?.map((g: any) =>
+            typeof g.id === 'string' ? parseInt(g.id, 10) : g.id,
+          ) || [],
+        popularity: movie.popularity || 0,
+        video: movie.video || false,
+      };
+      addToWatchlist(movieForWatchlist);
     }
   };
 
   const renderCastMember = ({item}: {item: Cast}) => (
     <View style={styles.castMember}>
       <Image
-        source={{uri: apiService.getProfileUrl(item.profile_path)}}
+        source={{uri: graphqlService.getProfileUrl(item.profile_path)}}
         style={styles.castImage}
         resizeMode="cover"
       />
@@ -136,7 +176,7 @@ export default function MovieDetailScreen() {
   const renderRecommendation = ({item}: {item: Movie}) => (
     <View style={styles.recommendationItem}>
       <Image
-        source={{uri: apiService.getPosterUrl(item.poster_path)}}
+        source={{uri: graphqlService.getPosterUrl(item.poster_path)}}
         style={styles.recommendationPoster}
         resizeMode="cover"
       />
@@ -161,8 +201,12 @@ export default function MovieDetailScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <ErrorMessage
-          message={error || strings.movieNotFound}
-          onRetry={fetchMovieDetails}
+          message={
+            typeof error === 'string'
+              ? error
+              : error?.message || strings.movieNotFound
+          }
+          onRetry={handleRetry}
         />
       </SafeAreaView>
     );
@@ -176,7 +220,7 @@ export default function MovieDetailScreen() {
       {/* Backdrop Image */}
       <View style={styles.backdropContainer}>
         <Image
-          source={{uri: apiService.getBackdropUrl(movie.backdrop_path)}}
+          source={{uri: graphqlService.getBackdropUrl(movie.backdrop_path)}}
           style={styles.backdrop}
           resizeMode="cover"
         />
@@ -188,14 +232,14 @@ export default function MovieDetailScreen() {
       <View style={styles.movieInfo}>
         <View style={styles.movieHeader}>
           <Image
-            source={{uri: apiService.getPosterUrl(movie.poster_path)}}
+            source={{uri: graphqlService.getPosterUrl(movie.poster_path)}}
             style={styles.poster}
             resizeMode="cover"
           />
           <View style={styles.movieDetails}>
             <Text style={styles.title}>{movie.title}</Text>
             <Text style={styles.year}>
-              ({new Date(movie.release_date).getFullYear()})
+              ({new Date(movie.release_date || '').getFullYear()})
             </Text>
 
             <View style={styles.movieMeta}>
@@ -206,12 +250,12 @@ export default function MovieDetailScreen() {
               </View>
               <Text style={styles.metaText}>
                 {formatDate(movie.release_date)} •{' '}
-                {formatRuntime(movie.runtime)}
+                {formatRuntime(movie.runtime || 0)}
               </Text>
             </View>
 
             <Text style={styles.genres}>
-              {movie.genres.map(genre => genre.name).join(', ')}
+              {movie.genres?.map((genre: any) => genre.name).join(', ') || ''}
             </Text>
 
             <Text style={styles.status}>
@@ -219,7 +263,7 @@ export default function MovieDetailScreen() {
             </Text>
             <Text style={styles.language}>
               {strings.originalLanguage}:{' '}
-              {movie.original_language.toUpperCase()}
+              {(movie.original_language || '').toUpperCase()}
             </Text>
           </View>
         </View>

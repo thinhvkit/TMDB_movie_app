@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 import {useAppContext} from '../contexts/AppContext';
-import {apiService} from '../services/api';
+import {useMovies, useSearchMovies} from '../hooks/useGraphQLMovies';
 import {Movie, MovieCategory, SortBy} from '../types';
 import {sortMovies} from '../utils/sorting';
 import {RootStackParamList} from '../navigation/AppNavigator';
@@ -47,37 +47,31 @@ export default function HomeScreen() {
   const {state, setSelectedCategory, setSelectedSort, setSearchQuery} =
     useAppContext();
 
-  const [movies, setMovies] = useState<Movie[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const fetchMovies = useCallback(async () => {
-    try {
-      setError(null);
+  // GraphQL hooks
+  const {
+    data: moviesData,
+    loading: moviesLoading,
+    error: moviesError,
+    refetch: refetchMovies,
+  } = useMovies(state.selectedCategory);
 
-      let response;
-      if (state.searchQuery.trim()) {
-        response = await apiService.searchMovies(state.searchQuery);
-      } else {
-        response = await apiService.getMoviesByCategory(state.selectedCategory);
-      }
+  const {
+    data: searchData,
+    loading: searchLoading,
+    error: searchError,
+    refetch: refetchSearch,
+  } = useSearchMovies(state.searchQuery);
 
-      setMovies(response.results);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch movies');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [state.selectedCategory, state.searchQuery]);
+  // Determine which data to use
+  const isSearching = state.searchQuery.trim().length > 0;
+  const data = isSearching ? searchData : moviesData;
+  const loading = isSearching ? searchLoading : moviesLoading;
+  const error = isSearching ? searchError : moviesError;
 
-  useEffect(() => {
-    setLoading(true);
-    fetchMovies();
-  }, [fetchMovies]);
+  const movies = useMemo(() => data?.results || [], [data]);
 
   useEffect(() => {
     const sorted = sortMovies(movies, state.selectedSort);
@@ -85,8 +79,11 @@ export default function HomeScreen() {
   }, [movies, state.selectedSort]);
 
   const handleRefresh = () => {
-    setRefreshing(true);
-    fetchMovies();
+    if (isSearching) {
+      refetchSearch();
+    } else {
+      refetchMovies();
+    }
   };
 
   const handleSearch = () => {
@@ -139,7 +136,7 @@ export default function HomeScreen() {
     </View>
   );
 
-  if (loading && !refreshing) {
+  if (loading) {
     return (
       <SafeAreaView style={styles.container}>
         {renderHeader()}
@@ -152,7 +149,10 @@ export default function HomeScreen() {
     return (
       <SafeAreaView style={styles.container}>
         {renderHeader()}
-        <ErrorMessage message={error} onRetry={fetchMovies} />
+        <ErrorMessage
+          message={error.message || 'Failed to load movies'}
+          onRetry={handleRefresh}
+        />
       </SafeAreaView>
     );
   }
@@ -165,7 +165,7 @@ export default function HomeScreen() {
         renderItem={renderMovieItem}
         keyExtractor={item => item.id.toString()}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
         }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
